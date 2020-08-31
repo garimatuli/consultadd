@@ -10,10 +10,7 @@ import com.garima.defectracking.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -62,7 +59,9 @@ public class TicketServiceImpl implements TicketService {
 //        ticket.setTicketDescription(ticketDTO.getTicketDescription());
 //        ticket.setTicketTitle(ticketDTO.getTicketTitle());
 //        ticket.setApplication(ticketDTO.getApplication());
-
+        Date date = new Date();
+        ticket.setCreationDate(date);
+        ticket.setLastModifiedDate(date);
         Ticket addedTicket = ticketRepository.save(ticket);
         if(addedTicket.equals(null))
             throw new AppException("Error in ticket creation");
@@ -73,12 +72,14 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public String updateTicket(long ticketId, Ticket ticket){
         Optional<Ticket> foundTicketWithId = ticketRepository.findById(ticketId);
+        Date date = new Date();
         if (foundTicketWithId.isPresent()) {
             Ticket foundTicket = foundTicketWithId.get();
             foundTicket.setTicketTitle(ticket.getTicketTitle());
             foundTicket.setTicketStatus(ticket.getTicketStatus());
             foundTicket.setTicketDescription(ticket.getTicketDescription());
             foundTicket.setApplication(ticket.getApplication());
+            foundTicket.setLastModifiedDate(date);
             ticketRepository.save(foundTicket);
             return "Ticket updated successfully";
         } else {

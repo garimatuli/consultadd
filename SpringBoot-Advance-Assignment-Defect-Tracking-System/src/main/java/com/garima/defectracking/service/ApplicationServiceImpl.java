@@ -7,6 +7,7 @@ import com.garima.defectracking.repository.ApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void postApplication(Application application) throws AppException {
         Application app = applicationRepository.checkAppName(application.getAppName());
         if ( app == null) {
+            Date date = new Date();
+            application.setCreationDate(date);
+            application.setLastModifiedDate(date);
             applicationRepository.save(application);
         }
         else
@@ -43,11 +47,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public void updateApplication(long id, Application application) throws AppException {
         Optional<Application> app = applicationRepository.findById(id);
+        Date date = new Date();
         if (app.isPresent()) {
             Application foundApp = app.get();
             foundApp.setAppName(application.getAppName());
             foundApp.setAppDescription(application.getAppDescription());
             foundApp.setAppOwner(application.getAppOwner());
+            foundApp.setLastModifiedDate(date);
             applicationRepository.save(foundApp);
         } else {
 //            throw new ResourceNotFound("Application",id);

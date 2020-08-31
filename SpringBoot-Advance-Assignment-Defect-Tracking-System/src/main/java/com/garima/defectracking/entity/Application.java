@@ -1,10 +1,13 @@
 package com.garima.defectracking.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +31,17 @@ public class Application implements Serializable  {
     @OneToMany(mappedBy = "application",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties(value = {"application", "hibernateLazyInitializer", "handler"})
     private Set<Ticket> tickets = new HashSet<Ticket>();
+
+
+    @Column(name = "createdAt", updatable = false)
+    @CreatedDate
+    @Temporal(TemporalType.DATE)    // insert date
+    private Date creationDate;
+
+    @Column (name = "updatedAt")
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)       // insert  both time and date
+    private Date lastModifiedDate;
 
 
     public Application() {
@@ -71,5 +85,22 @@ public class Application implements Serializable  {
 
     public void setTickets(Set<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -40,6 +43,17 @@ public class Ticket implements Serializable{
 
 //    @OneToMany(mappedBy = "ticket",fetch = FetchType.LAZY)
 //    private List<Release> releaseList;
+
+    @Column(name = "createdAt", updatable = false)
+    @CreatedDate
+//    @Temporal(TemporalType.DATE)    // insert date
+    @Temporal(TemporalType.TIMESTAMP)       // insert  both time and date
+    private Date creationDate;
+
+    @Column (name = "updatedAt")
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)       // insert  both time and date
+    private Date lastModifiedDate;
 
     public Ticket() {
     }
@@ -101,4 +115,21 @@ public class Ticket implements Serializable{
 //    public void setAppId(long appId) {
 //        this.appId = appId;
 //    }
+
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 }
